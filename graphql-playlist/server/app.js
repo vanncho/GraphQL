@@ -2,9 +2,14 @@ const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const schema = require('./src/schema/schema');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 
+// allow cross-origin requests
+app.use(cors());
+
+// connect ot mLab database
 mongoose.connect('mongodb://vancho:test123@ds113936.mlab.com:13936/gql-playlist', { useNewUrlParser: true });
 mongoose.connection.once('open', () => {
 
