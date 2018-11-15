@@ -1,2 +1,5 @@
 # dependencies
+/graphql-playlist/client/node_modules
 /graphql-playlist/server/node_modules
+/point-of-sale/client/node_modules
+/point-of-sale/server/node_modules
