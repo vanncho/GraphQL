@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { graphql } from 'react-apollo';
 import toastr from 'toastr';
+import { registerUserMutation } from '../../queries/auth';
 
 class Register extends Component {
 
@@ -20,11 +22,39 @@ class Register extends Component {
     submithUser(e) {
         e.preventDefault();
 
-        if (this.state.password !== this.state.repeatPassword) {
-            toastr.error('Password and repeat password not match!');
+        if (this.state.repeatPassword.length === 0) {
+            toastr.error('Repeat password must not be empty!');
+        }
+
+        if (this.state.password.length === 0) {
+            toastr.error('Password must not be empty!');
         }
         
-        console.log(this.state);
+        if (this.state.username.length === 0) {
+            toastr.error('Username must not be empty!');
+        }
+
+        if (this.state.password !== this.state.repeatPassword) {
+            toastr.error('Password and repeat password not match!');
+            return;
+        }
+
+        if (this.state.username.length > 0 && this.state.password.length > 0) {
+
+            this.props.registerUser({
+                variables: {
+                    name: this.state.username,
+                    password: this.state.password
+                }
+            }).then(res => {
+                if (res.data.registerUser.name) {
+                    this.props.history.push('/login');
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
     }
 
     render() {
@@ -74,4 +104,4 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default graphql(registerUserMutation, {name: "registerUser" })(Register);
