@@ -25,7 +25,7 @@ const UserType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
     fields: {
-        getUserByUsername: {
+        getUserByUsername12: {
             type: UserType,
             args: { username: { type: GraphQLString} },
             resolve(parent, args, { SECRET, user }) {
@@ -60,22 +60,6 @@ const Mutation = new GraphQLObjectType({
                 });
 
                 return user.save();
-
-                //// not using bcrypt because async bcrypt.hash() is crashing the server
-
-                // bcrypt.genSalt(12, function(err, salt) {
-                //     bcrypt.hash(args.password, salt, function(err, hash) {
-                //         // Store hash in your password DB.
-
-                //         let user = new User({
-                //             username: args.username,
-                //             password: hash
-                //         });
-        
-                //         return user.save();
-                //     });
-                // });
-
             }
         },
         login: {
@@ -119,6 +103,18 @@ const Mutation = new GraphQLObjectType({
             type: GraphQLBoolean,
             resolve(parent, args, { SECRET }, req) {
                 console.log(req);
+            }
+        },
+        getUserByUsername: {
+            type: UserType,
+            args: { username: { type: GraphQLString} },
+            resolve(parent, args, { SECRET, user }) {
+        
+                if (user) {
+                    return User.findOne({ username: args.username });
+                }
+
+                throw new Error('Unauthorized request!');
             }
         }
     }

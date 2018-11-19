@@ -44,13 +44,10 @@ class Login extends React.Component<LoginProps, LoginState> {
             }
         }).then((res: any) => {
 
-            // console.log('res');
-            // console.log(res);        
-            console.log('REACT LOGIN');
-        console.log(res.data.login)
             localStorage.setItem('token', res.data.login);
+            this.props.history.push('/');
+
         }).catch((err: any) => {
-            console.log('err');
             console.log(err);
         });
     }
@@ -93,4 +90,4 @@ class Login extends React.Component<LoginProps, LoginState> {
     }
 }
 
-export default graphql<LoginProps, LoginState>(loginMutation, {name: "loginUser" })(Login);
+export default graphql<LoginProps, LoginState>(loginMutation, { name: "loginUser" })(Login);

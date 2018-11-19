@@ -15,7 +15,7 @@ export const loginMutation = gql`
 `;
 
 export const getUsers = gql`
-    query($username: String){
+    mutation($username: String){
         getUserByUsername(username: $username) {
             id
             username

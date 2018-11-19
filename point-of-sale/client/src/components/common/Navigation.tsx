@@ -16,14 +16,13 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
             authenticated: false
         }
     }
-    componentDidMount() {
-
-        // get is authenticted
-    }
 
     displayNavigation() {
 
-        if (this.state.authenticated) {
+        // !
+        const isAuthenticated = localStorage.getItem('token') !== null || false;
+
+        if (isAuthenticated) {
 
             return (
                 <React.Fragment>
@@ -34,7 +33,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                         <Link to="/overview">Overview</Link>
                     </li>
                     <li>
-                        <Link className="logout" to="/logout">Logout</Link>
+                        <Link className="logout" to="" onClick={() => { localStorage.clear(); return this.setState({ authenticated: false })} }>Logout</Link>
                     </li>
                 </React.Fragment>
             );

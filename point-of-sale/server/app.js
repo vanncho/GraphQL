@@ -21,7 +21,7 @@ const addUser = async (req) => {
 
     try {
         const token = req.headers.authorization;
-
+console.log(token)
         if (token !== 'null') {
             const { user } = await jwt.verify(token, SECRET);
             req.user = user;

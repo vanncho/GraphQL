@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { graphql } from 'react-apollo';
+import toastr from 'toastr';
+
 import { getUsers } from '../../queries/auth';
 
 interface HomeProps {
-    data: any
+    history: any,
+    data: any,
+    getUsers: Function
 };
 
 interface HomeState {
@@ -21,13 +25,22 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     compon(): void {
-        const { data } = this.props.data;
 
-        console.log(this.props.data.getUserByUsername)
+        this.props.getUsers({
+            variables: {
+                username: 'vancho'
+            }
+        }).then((res: any) => {
+            
 
-        if (data && data.loading) {
-            console.log(data.getUserByUsername)
-        }
+            if (res.data.getUserByUsername) {
+                console.log(res.data.getUserByUsername);
+            } else {
+                toastr.error(res.errors[0].message);
+            }
+        }).catch((err: any) => {
+            console.log(err);
+        });
     }
 
     render() {
@@ -47,12 +60,13 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 }
 
-export default graphql<HomeProps, HomeState>(getUsers, {
-    options: (props) => {
-        return {
-            variables: {
-                username: 'vancho'
-            }
-        }
-    }
-})(Home);
+export default graphql<HomeProps, HomeState>(getUsers, { name: 'getUsers' })(Home);
+// export default graphql<HomeProps, HomeState>(getUsers, {
+//     options: (props) => {
+//         return {
+//             variables: {
+//                 username: 'vancho'
+//             }
+//         }
+//     }
+// })(Home);
