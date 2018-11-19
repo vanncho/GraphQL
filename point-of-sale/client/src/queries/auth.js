@@ -1,9 +1,9 @@
 import { gql } from 'apollo-boost';
 
 export const registerUserMutation = gql`
-    mutation($name: String!, $password: String!) {
-        registerUser(name: $name, password: $password) {
-            name
+    mutation($username: String!, $password: String!) {
+        registerUser(username: $username, password: $password) {
+            username
         }
      }
 `;

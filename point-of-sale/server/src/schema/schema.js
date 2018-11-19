@@ -49,7 +49,7 @@ const Mutation = new GraphQLObjectType({
                 username: { type: new GraphQLNonNull(GraphQLString) },
                 password: { type: new GraphQLNonNull(GraphQLString) }
             },
-            resolve(parent, args, { SECRET, user }) {
+            resolve(parent, args) {
 
                 const salt = encryption.generateSalt();
 

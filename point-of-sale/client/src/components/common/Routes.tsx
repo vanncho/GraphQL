@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Home from '../home/Home.jsx';
+import Home from '../home/Home';
 import Register from '../auth/Register';
 import Login from '../auth/Login';
 

@@ -1,11 +1,22 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { graphql } from 'react-apollo';
 import toastr from 'toastr';
 import { registerUserMutation } from '../../queries/auth';
 
-class Register extends Component {
+interface RegisterProps {
+    history: any
+    registerUser: Function
+};
 
-    constructor(props) {
+interface RegisterState {
+    username: string,
+    password: string,
+    repeatPassword: string
+};
+
+class Register extends React.Component<RegisterProps, RegisterState> {
+
+    constructor(props: RegisterProps) {
         super(props);
 
         this.state = {
@@ -15,11 +26,18 @@ class Register extends Component {
         }
     }
 
-    inputHandler(e) {
-        this.setState({ [e.target.name]: e.target.value });
+    inputHandler(e: React.FormEvent<HTMLInputElement>): void {
+        let target = e.target as HTMLInputElement;
+
+        switch (target.name) {
+            case 'username': this.setState({ username: target.value });
+            case 'password': this.setState({ password: target.value });
+            case 'repeatPassword': this.setState({ repeatPassword: target.value });
+            default: break;
+        }
     }
 
-    submithUser(e) {
+    submithUser(e: React.FormEvent<HTMLInputElement>): void {
         e.preventDefault();
 
         if (this.state.repeatPassword.length === 0) {
@@ -43,14 +61,14 @@ class Register extends Component {
 
             this.props.registerUser({
                 variables: {
-                    name: this.state.username,
+                    username: this.state.username,
                     password: this.state.password
                 }
-            }).then(res => {
-                if (res.data.registerUser.name) {
+            }).then((res: any) => {
+                if (res.data.registerUser.username) {
                     this.props.history.push('/login');
                 }
-            }).catch(err => {
+            }).catch((err: any) => {
                 console.log(err);
             });
         }
@@ -104,4 +122,4 @@ class Register extends Component {
     }
 }
 
-export default graphql(registerUserMutation, {name: "registerUser" })(Register);
+export default graphql<RegisterProps, RegisterState>(registerUserMutation, {name: "registerUser" })(Register);

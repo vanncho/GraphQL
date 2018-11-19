@@ -1,10 +1,20 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { graphql } from 'react-apollo';
 import { loginMutation } from '../../queries/auth';
 
-class Login extends Component {
+interface LoginProps {
+    history: any
+    loginUser: Function
+};
 
-    constructor(props) {
+interface LoginState {
+    username: string,
+    password: string
+};
+
+class Login extends React.Component<LoginProps, LoginState> {
+
+    constructor(props: LoginProps) {
         super(props);
 
         this.state = {
@@ -13,11 +23,18 @@ class Login extends Component {
         }
     }
 
-    inputHandler(e) {
-        this.setState({ [e.target.name]: e.target.value });
+    inputHandler(e: React.FormEvent<HTMLInputElement>): void {
+        let target = e.target as HTMLInputElement;
+    // this.props.login[target.name] = target.value;
+        switch (target.name) {
+            case 'username': this.setState({ username: target.value });
+            case 'password': this.setState({ password: target.value });
+            default: break;
+        }
+        
     }
 
-    loginUser(e) {
+    loginUser(e: React.FormEvent<HTMLInputElement>): void {
         e.preventDefault();
 
         this.props.loginUser({
@@ -25,14 +42,14 @@ class Login extends Component {
                 username: this.state.username,
                 password: this.state.password
             }
-        }).then(res => {
+        }).then((res: any) => {
 
             // console.log('res');
             // console.log(res);        
             console.log('REACT LOGIN');
         console.log(res.data.login)
             localStorage.setItem('token', res.data.login);
-        }).catch(err => {
+        }).catch((err: any) => {
             console.log('err');
             console.log(err);
         });
@@ -76,4 +93,4 @@ class Login extends Component {
     }
 }
 
-export default graphql(loginMutation, {name: "loginUser" })(Login);
+export default graphql<LoginProps, LoginState>(loginMutation, {name: "loginUser" })(Login);

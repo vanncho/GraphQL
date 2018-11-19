@@ -1,9 +1,15 @@
-import React, { Component, Fragment } from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-class Navigation extends Component {
+interface NavigationProps {};
 
-    constructor(props) {
+interface NavigationState {
+    authenticated: boolean
+};
+
+class Navigation extends React.Component<NavigationProps, NavigationState> {
+
+    constructor(props: NavigationProps) {
         super(props);
 
         this.state = {
@@ -20,7 +26,7 @@ class Navigation extends Component {
         if (this.state.authenticated) {
 
             return (
-                <Fragment>
+                <React.Fragment>
                     <li>
                         <Link to="/editor">Editor</Link>
                     </li>
@@ -30,19 +36,19 @@ class Navigation extends Component {
                     <li>
                         <Link className="logout" to="/logout">Logout</Link>
                     </li>
-                </Fragment>
+                </React.Fragment>
             );
         } else {
 
             return (
-                <Fragment>
+                <React.Fragment>
                     <li>
                         <Link to="/login">Sign in</Link>
                     </li>
                     <li>
                         <Link to="/register">Register</Link>
                     </li>
-                </Fragment>
+                </React.Fragment>
             );
         }
     }
