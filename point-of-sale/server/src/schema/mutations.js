@@ -1,4 +1,8 @@
+// Mongoose
 const User = require('../models/user');
+const Token = require('../models/token');
+
+// GraphQL
 const { UserType } = require('./types');
 const graphql = require('graphql');
 const {
@@ -6,6 +10,7 @@ const {
     GraphQLBoolean,
     GraphQLNonNull,
 } = graphql;
+
 const jwt = require('jsonwebtoken');
 const encryption = require('../utils/encryption');
 
@@ -61,7 +66,7 @@ const loginUserMutation = {
             },
             SECRET,
             {
-                expiresIn: 60
+                expiresIn: '1d'
             }
         );
 
@@ -71,10 +76,22 @@ const loginUserMutation = {
 
 const logoutUserMutation = {
     type: GraphQLBoolean,
-    resolve(parent, args, { SECRET }, req) {
+    args: {
+        token: { type: GraphQLString }
+    },
+    async resolve(parent, args) {
 
-        // TODO: implement mongodb forbidden tokens
-        console.log(req);
+        const { token } = args;
+        const tokenModel = new Token({ token, valid: false });
+
+        try {
+
+            const saveToken = await tokenModel.save();
+            return true;
+        } catch(e) {
+
+            return false;
+        }
     }
 }
 

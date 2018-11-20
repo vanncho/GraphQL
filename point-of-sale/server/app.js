@@ -14,16 +14,24 @@ const options = {
     useNewUrlParser: true
 };
 const SECRET = 'somegf745supe235rd2534yghfupersecret';
+const Token = require('./src/models/token');
 
 const app = express();
 
 const addUser = async (req) => {
 
     try {
-        const token = req.headers.authorization;
+        const tokenHeader = req.headers.authorization;
 
-        if (token !== 'null') {
-            const { user } = await jwt.verify(token, SECRET);
+        if (tokenHeader !== 'null') {
+
+            const tokenDB = await Token.findOne({ tokenHeader });
+            let { user } = await jwt.verify(tokenHeader, SECRET);
+
+            if (tokenDB) {
+                user = null;
+            }
+
             req.user = user;
         }
 
