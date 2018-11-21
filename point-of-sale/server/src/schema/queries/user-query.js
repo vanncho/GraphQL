@@ -1,10 +1,13 @@
-const User = require('../models/user');
-const { UserType } = require('./types');
+// Mongoose
+const User = require('../../models/user');
+
+// GraphQL
+const { UserType } = require('../types');
 const graphql = require('graphql');
 const {
     GraphQLString
 } = graphql;
-const UnauthorizedError = require('../errors/unauthorized-error');
+const UnauthorizedError = require('../../errors/unauthorized-error');
 
 
 
@@ -12,7 +15,7 @@ const getUserByUsernameQuery = {
     type: UserType,
     args: { username: { type: GraphQLString} },
     resolve(parent, args, { SECRET, user }) {
-console.log('2')
+
         if (user) {
             return User.findOne({ username: args.username });
         }

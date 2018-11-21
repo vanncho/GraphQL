@@ -1,18 +1,19 @@
 // Mongoose
-const User = require('../models/user');
-const Token = require('../models/token');
+const User = require('../../models/user');
+const Token = require('../../models/token');
+const Product = require('../../models/product');
 
 // GraphQL
-const { UserType } = require('./types');
+const { UserType } = require('../types');
 const graphql = require('graphql');
 const {
     GraphQLString,
     GraphQLBoolean,
-    GraphQLNonNull,
+    GraphQLNonNull
 } = graphql;
 
 const jwt = require('jsonwebtoken');
-const encryption = require('../utils/encryption');
+const encryption = require('../../utils/encryption');
 
 
 
@@ -82,15 +83,14 @@ const logoutUserMutation = {
     async resolve(parent, args) {
 
         const { token } = args;
-        console.log(token);
         const tokenModel = new Token({ token, valid: false });
 
         try {
 
             const saveToken = await tokenModel.save();
             return true;
-        } catch(e) {
-            console.log(e);
+        } catch(err) {
+            console.log(err);
             return false;
         }
     }

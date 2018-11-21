@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose, withApollo } from 'react-apollo';
 import toastr from 'toastr';
+import ReceiptList from '../receipts/ReceiptList';
 
 import { getUsers } from '../../queries/auth';
 
@@ -44,6 +45,16 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
+
+        const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
+
+        if (isAuthenticated) {
+
+            return (
+                <ReceiptList />
+            );
+        }
+
         return (
             <section className="clearfix" id="welcome-section">
                 <div className="welcome-text">

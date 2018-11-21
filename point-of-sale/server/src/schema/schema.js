@@ -1,10 +1,18 @@
 const graphql = require('graphql');
-const { getUserByUsernameQuery } = require('./queries');
+
+// queries
+const { getUserByUsernameQuery } = require('./queries/user-query');
+const { getProductsQuery } = require('./queries/product-query');
+
+// mutations
 const { 
     registerUserMutation,
     loginUserMutation,
     logoutUserMutation
-} = require('../schema/mutations');
+} = require('./mutations/auth-mutation');
+const { 
+    addProductMutation
+} = require('./mutations/product-mutation');
 const {
     GraphQLSchema,
     GraphQLObjectType
@@ -15,7 +23,8 @@ const {
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
     fields: {
-        getUserByUsername: getUserByUsernameQuery
+        getUserByUsername: getUserByUsernameQuery,
+        getProducts: getProductsQuery
     }
 });
 
@@ -24,7 +33,8 @@ const Mutation = new GraphQLObjectType({
     fields: {
         registerUser: registerUserMutation,
         login: loginUserMutation,
-        logout: logoutUserMutation
+        logout: logoutUserMutation,
+        addProduct: addProductMutation
     }
 });
 

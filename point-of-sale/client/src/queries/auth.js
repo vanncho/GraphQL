@@ -28,3 +28,15 @@ export const getUsers = gql`
         }
     }
 `;
+
+// REMOVE FROM HERE
+export const getProductsQuery = gql`
+    query{
+        getProducts{
+            id
+            name
+            quantity
+            price
+        }
+    }
+`;

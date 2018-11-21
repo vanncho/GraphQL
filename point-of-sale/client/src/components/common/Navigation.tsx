@@ -27,7 +27,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
             return (
                 <React.Fragment>
                     <li>
-                        <Link to="/editor">Editor</Link>
+                        <Link to="/create">Create Receipt</Link>
                     </li>
                     <li>
                         <Link to="/overview">Overview</Link>
