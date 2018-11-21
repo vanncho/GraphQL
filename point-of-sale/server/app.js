@@ -25,7 +25,7 @@ const addUser = async (req) => {
 
         if (tokenHeader !== 'null') {
 
-            const tokenDB = await Token.findOne({ tokenHeader });
+            const tokenDB = await Token.findOne({ token: tokenHeader });
             let { user } = await jwt.verify(tokenHeader, SECRET);
 
             if (tokenDB) {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { graphql } from 'react-apollo';
+import toastr from 'toastr';
 import { loginMutation } from '../../queries/auth';
 
 interface LoginProps {
@@ -25,7 +26,7 @@ class Login extends React.Component<LoginProps, LoginState> {
 
     inputHandler(e: React.FormEvent<HTMLInputElement>): void {
         let target = e.target as HTMLInputElement;
-    // this.props.login[target.name] = target.value;
+
         switch (target.name) {
             case 'username': this.setState({ username: target.value });
             case 'password': this.setState({ password: target.value });
@@ -44,8 +45,13 @@ class Login extends React.Component<LoginProps, LoginState> {
             }
         }).then((res: any) => {
 
-            localStorage.setItem('token', res.data.login);
-            this.props.history.push('/');
+            if (res.data.login) {
+                localStorage.setItem('token', res.data.login);
+                this.props.history.push('/');
+                toastr.success('Login successful.');
+            } else {
+                res.errors.map((err: { locations: Array<object>, message: string, path: string }) => toastr.error(err.message));
+            }
 
         }).catch((err: any) => {
             console.log(err);

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Logout from '../../components/auth/Logout';
 
-interface NavigationProps {};
+interface NavigationProps { };
 
 interface NavigationState {
     authenticated: boolean
@@ -19,8 +20,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
 
     displayNavigation() {
 
-        // !
-        const isAuthenticated = localStorage.getItem('token') !== null || false;
+        const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
 
         if (isAuthenticated) {
 
@@ -33,7 +33,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
                         <Link to="/overview">Overview</Link>
                     </li>
                     <li>
-                        <Link className="logout" to="" onClick={() => { localStorage.clear(); return this.setState({ authenticated: false })} }>Logout</Link>
+                        <Logout />
                     </li>
                 </React.Fragment>
             );

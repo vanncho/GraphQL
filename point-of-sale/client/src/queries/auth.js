@@ -14,9 +14,15 @@ export const loginMutation = gql`
      }
 `;
 
+export const logoutMutation = gql`
+    mutation($token: String!) {
+        logout(token: $token)
+     }
+`;
+
 export const getUsers = gql`
-    mutation($username: String){
-        getUserByUsername(username: $username) {
+    query($username: String){
+        getUserByUsername(username: $username){
             id
             username
         }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { graphql } from 'react-apollo';
+import { compose, withApollo } from 'react-apollo';
 import toastr from 'toastr';
 
 import { getUsers } from '../../queries/auth';
@@ -7,6 +7,7 @@ import { getUsers } from '../../queries/auth';
 interface HomeProps {
     history: any,
     data: any,
+    client: any,
     getUsers: Function
 };
 
@@ -26,20 +27,19 @@ class Home extends React.Component<HomeProps, HomeState> {
 
     compon(): void {
 
-        this.props.getUsers({
+        // TEST
+        this.props.client.query({
+            query: getUsers,
             variables: {
                 username: 'vancho'
             }
         }).then((res: any) => {
-            
 
-            if (res.data.getUserByUsername) {
-                console.log(res.data.getUserByUsername);
-            } else {
+            if (res.data.getUserByUsername === null && !res.data.loading) {
                 toastr.error(res.errors[0].message);
+            } else {
+                console.log(res.data.getUserByUsername);
             }
-        }).catch((err: any) => {
-            console.log(err);
         });
     }
 
@@ -60,13 +60,4 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 }
 
-export default graphql<HomeProps, HomeState>(getUsers, { name: 'getUsers' })(Home);
-// export default graphql<HomeProps, HomeState>(getUsers, {
-//     options: (props) => {
-//         return {
-//             variables: {
-//                 username: 'vancho'
-//             }
-//         }
-//     }
-// })(Home);
+export default compose(withApollo)(Home);

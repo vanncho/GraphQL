@@ -82,6 +82,7 @@ const logoutUserMutation = {
     async resolve(parent, args) {
 
         const { token } = args;
+        console.log(token);
         const tokenModel = new Token({ token, valid: false });
 
         try {
@@ -89,7 +90,7 @@ const logoutUserMutation = {
             const saveToken = await tokenModel.save();
             return true;
         } catch(e) {
-
+            console.log(e);
             return false;
         }
     }

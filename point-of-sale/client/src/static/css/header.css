@@ -35,7 +35,7 @@ header {
 	display: inline-block;
 }
 
-#nav ul>li a {
+#nav ul>li a, .logout {
 	display: block;
 	font-weight: bold;
 	padding: 5px;
@@ -45,7 +45,7 @@ header {
 	color: #fff;
 }
 
-#nav ul>li a.logout {
-	color: black;
-	background: #fff;
+.logout:hover {
+	cursor: pointer;
+	text-decoration: underline;
 }

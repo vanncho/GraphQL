@@ -12,7 +12,7 @@ const getUserByUsernameQuery = {
     type: UserType,
     args: { username: { type: GraphQLString} },
     resolve(parent, args, { SECRET, user }) {
-
+console.log('2')
         if (user) {
             return User.findOne({ username: args.username });
         }

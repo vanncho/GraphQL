@@ -53,17 +53,6 @@ const client = new ApolloClient({
     link: concat(authMiddleware, link),
     cache: new InMemoryCache(),
     defaultOptions,
-    // uri: 'http://localhost:4000/api',
-    // request: async operation => {
-        
-    //     const token = await localStorage.getItem('token');
-
-    //     operation.setContext({
-    //       headers: {
-    //         authorization: token ? token : null
-    //       }
-    //     });
-    // }
 });
 
 ReactDOM.render(
