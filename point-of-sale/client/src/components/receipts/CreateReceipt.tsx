@@ -4,7 +4,7 @@ import Product from '../products/Product';
 import ProductType from '../products/ProductType';
 import toastr from 'toastr';
 
-import { getProductsQuery } from '../../queries/auth.js';
+import { getProductsQuery } from '../../queries/product.js';
 import { addProductMutation, deleteProductMutation } from '../../mutations/product';
 
 interface CreateReceiptProps {

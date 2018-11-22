@@ -4,7 +4,7 @@ import { RouteComponentProps  } from 'react-router';
 import { graphql } from 'react-apollo';
 import toastr from 'toastr';
 
-import { logoutMutation } from '../../queries/auth.js';
+import { logoutMutation } from '../../mutations/auth.js';
 
 interface LogoutProps<RouteComponentProps> { 
     logout: Function,

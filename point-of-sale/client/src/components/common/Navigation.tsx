@@ -54,7 +54,9 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
 
     displayCashier(): React.ReactNode {
 
-        if (this.state.authenticated) {
+        const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
+
+        if (isAuthenticated) {
 
             return (
                 <div id="cashier">

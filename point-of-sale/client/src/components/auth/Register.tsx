@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { graphql } from 'react-apollo';
 import toastr from 'toastr';
-import { registerUserMutation } from '../../queries/auth';
+import { registerUserMutation } from '../../mutations/auth';
 
 interface RegisterProps {
     history: any
