@@ -7,3 +7,11 @@ export const addProductMutation = gql`
         }
      }
 `;
+
+export const deleteProductMutation = gql`
+     mutation($id: String!) {
+        deleteProduct(id: $id) {
+            name
+        }
+     }
+`;

@@ -11,7 +11,8 @@ const {
     logoutUserMutation
 } = require('./mutations/auth-mutation');
 const { 
-    addProductMutation
+    addProductMutation,
+    deleteProductMutation
 } = require('./mutations/product-mutation');
 const {
     GraphQLSchema,
@@ -34,7 +35,8 @@ const Mutation = new GraphQLObjectType({
         registerUser: registerUserMutation,
         login: loginUserMutation,
         logout: logoutUserMutation,
-        addProduct: addProductMutation
+        addProduct: addProductMutation,
+        deleteProduct: deleteProductMutation
     }
 });
 

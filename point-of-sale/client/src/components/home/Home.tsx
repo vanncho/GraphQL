@@ -44,7 +44,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         });
     }
 
-    render() {
+    render(): React.ReactNode {
 
         const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
 

@@ -27,6 +27,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     inputHandler(e: React.FormEvent<HTMLInputElement>): void {
+        
         let target = e.target as HTMLInputElement;
 
         switch (target.name) {
@@ -38,6 +39,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     submithUser(e: React.FormEvent<HTMLInputElement>): void {
+
         e.preventDefault();
 
         if (this.state.repeatPassword.length === 0) {
@@ -75,7 +77,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     }
 
-    render() {
+    render(): React.ReactNode {
 
         return (
             <section className="clearfix" id="welcome-section">

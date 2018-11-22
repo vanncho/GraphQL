@@ -18,7 +18,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         }
     }
 
-    displayNavigation() {
+    displayNavigation(): React.ReactNode {
 
         const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
 
@@ -52,7 +52,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         }
     }
 
-    displayCashier() {
+    displayCashier(): React.ReactNode {
 
         if (this.state.authenticated) {
 
@@ -65,7 +65,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
         }
     }
 
-    render() {
+    render(): React.ReactNode {
         return (
             <header className="clearfix" id="profile">
                 { this.displayCashier() }

@@ -7,9 +7,7 @@ interface ProductProps {
     price: number
 }
 
-interface ProductState {
-
-}
+interface ProductState { }
 
 class Product extends React.Component<ProductProps, ProductState> {
 
@@ -17,7 +15,7 @@ class Product extends React.Component<ProductProps, ProductState> {
         super(props);
     }
 
-    render() {
+    render(): React.ReactNode {
 
         return (
             <React.Fragment>

@@ -3,7 +3,7 @@ import Receipt from './Receipt';
 
 class ReceiptList extends React.Component {
 
-    render() {
+    render(): React.ReactNode {
 
         return (
             <section id="all-receipt-view">

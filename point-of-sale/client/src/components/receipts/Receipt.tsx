@@ -2,7 +2,7 @@ import * as React from 'react';
 
 class Receipt extends React.Component {
 
-    render() {
+    render(): React.ReactNode {
 
         return (
             <React.Fragment>

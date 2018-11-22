@@ -23,7 +23,7 @@ class Logout extends React.Component<LogoutProps<RouteComponentProps>, any> {
         }
     }
 
-    logout() {
+    logout(): void {
 
         const token: string | null = localStorage.getItem('token');
 
@@ -48,7 +48,7 @@ class Logout extends React.Component<LogoutProps<RouteComponentProps>, any> {
         });
     }
 
-    render() {
+    render(): React.ReactNode {
         return(
             <span className="logout" onClick={ this.logout.bind(this) }>Logout</span>
         );

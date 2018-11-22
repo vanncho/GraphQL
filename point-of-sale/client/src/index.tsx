@@ -19,11 +19,11 @@ import { DefaultOptions } from 'apollo-client/ApolloClient';
 
 const defaultOptions: DefaultOptions = { 
   watchQuery: {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'ignore',
   },
   query: {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-and-network',
     errorPolicy: 'all',
   },
   mutate: {
@@ -32,6 +32,7 @@ const defaultOptions: DefaultOptions = {
 };
 
 const authMiddleware = new ApolloLink((operation, forward) => {
+    
     // add the authorization to the headers
     operation.setContext({
       headers: {

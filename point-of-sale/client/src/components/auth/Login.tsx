@@ -25,6 +25,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     }
 
     inputHandler(e: React.FormEvent<HTMLInputElement>): void {
+        
         let target = e.target as HTMLInputElement;
 
         switch (target.name) {
@@ -36,6 +37,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     }
 
     loginUser(e: React.FormEvent<HTMLInputElement>): void {
+
         e.preventDefault();
 
         this.props.loginUser({
@@ -58,7 +60,7 @@ class Login extends React.Component<LoginProps, LoginState> {
         });
     }
 
-    render() {
+    render(): React.ReactNode {
 
         return (
             <section className="clearfix" id="welcome-section">

@@ -42,4 +42,26 @@ const addProductMutation = {
     }
 };
 
-module.exports = { addProductMutation };
+const deleteProductMutation = {
+    type: ProductType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    async resolve(parent, args, { SECRET, user }) {
+
+        if (user) {
+            const dbUser = await User.findOne({ username: user.username });
+
+            if (dbUser) {
+                return Product.findOneAndDelete({_id: args.id});
+            }
+        }
+
+        throw new UnauthorizedError();
+    }
+}
+
+module.exports = { 
+    addProductMutation,
+    deleteProductMutation
+};

@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { graphql, compose, withApollo } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import Product from '../products/Product';
 import ProductType from '../products/ProductType';
+import toastr from 'toastr';
 
 import { getProductsQuery } from '../../queries/auth.js';
-import { addProductMutation } from '../../mutations/product';
+import { addProductMutation, deleteProductMutation } from '../../mutations/product';
 
 interface CreateReceiptProps {
     products: any,
-    addProduct: Function
+    addProduct: Function,
+    deleteProduct: Function
 }
 
 interface CreateReceiptState {
@@ -29,7 +31,27 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
         }
     }
 
-    displayProducts() {
+    deleteProduct(productId: string): void {
+
+        if (productId.length > 0) {
+            
+            this.props.deleteProduct({
+                variables: {
+                    id: productId
+                },
+                refetchQueries: [{ query: getProductsQuery }]
+            }).then((res: any) => {
+
+                if (res.data.deleteProduct === null && !res.data.loading) {
+                    toastr.error(res.errors[0].message);
+                } else {
+                    toastr.success(res.data.deleteProduct.name + ' deleted!');
+                }
+            })
+        }
+    }
+
+    displayProducts(): React.ReactNode {
 
         let products: Array<ProductType> = [];
 
@@ -47,7 +69,7 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                                 price={product.price}
                             />
                             <div className="col right">
-                                <a href="#">✖</a>
+                                <a href="#" onClick={ () => this.deleteProduct(product.id) }>✖</a>
                             </div>
                         </div>
             });
@@ -55,36 +77,57 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
     }
 
     inputHandler(e: React.FormEvent<HTMLInputElement>): void {
-        let target = e.target as HTMLInputElement;
+
+        let target: HTMLInputElement = e.target as HTMLInputElement;
 
         switch (target.name) {
-            case 'name': this.setState({ name: target.value });
-            case 'quantity': this.setState({ quantity: Number(target.value) });
-            case 'price': this.setState({ price: Number(target.value) });
+            case 'name': this.setState({ name: target.value }); break;
+            case 'quantity': this.setState({ quantity: Number(target.value) }); break;
+            case 'price': this.setState({ price: Number(target.value) }); break;
             default: break;
         }
     }
 
-    submithProduct(e: React.FormEvent<HTMLInputElement>) {
+    submithProduct(e: React.FormEvent<HTMLInputElement>): void {
+        
         e.preventDefault();
+        let correct: boolean = true;
 
-        // INPUT VERIFICATIONS 
+        if (this.state.name.length === 0) {
+            toastr.error('Name must not be an empty string!');
+            correct = false;
+        }
 
-        this.props.addProduct({
-            variables: {
-                name: this.state.name,
-                quantity: this.state.quantity,
-                price: this.state.price
-            },
-            // refetchQueries: [{ query: getProductsQuery }]   // Throws exception !
-        }).then((res: any) => {
-                console.log(res)
-        }).catch((err: any) => {
-            console.log(err);
-        });;
+        if (isNaN(this.state.quantity) || this.state.quantity === 0) {
+            toastr.error('Quantity field is empty or not a number!');
+            correct = false;
+        }
+
+        if (isNaN(this.state.price) || this.state.price === 0) {
+            toastr.error('Price field is empty or not a number!');
+            correct = false;
+        }
+
+        if (correct) {
+
+            this.props.addProduct({
+                variables: {
+                    name: this.state.name,
+                    quantity: this.state.quantity,
+                    price: this.state.price
+                },
+                refetchQueries: [{ query: getProductsQuery }]
+                
+            }).then((res: any) => {
+
+                    toastr.success(res.data.addProduct.name + ' added successfully.');
+            }).catch((err: any) => {
+                console.log(err);
+            });
+        }
     }
 
-    render() {
+    render(): React.ReactNode {
 
         return(
             <section id="create-receipt-view">
@@ -104,6 +147,7 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                         <form id="create-entry-form" onSubmit={ this.submithProduct.bind(this) } >
                             <div className="col wide">
                                 <input
+                                    type="text"
                                     name="name"
                                     placeholder="Product name"
                                     onChange={ this.inputHandler.bind(this) }
@@ -111,6 +155,7 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                             </div>
                             <div className="col wide">
                                 <input
+                                    type="number"
                                     name="quantity"
                                     placeholder="Quantity"
                                     onChange={ this.inputHandler.bind(this) }
@@ -118,6 +163,8 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                             </div>
                             <div className="col wide">
                                 <input
+                                    type="number"
+                                    step="0.01"
                                     name="price"
                                     placeholder="Price per Unit"
                                     onChange={ this.inputHandler.bind(this) }
@@ -154,4 +201,5 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
 export default compose(
     graphql<CreateReceiptProps, CreateReceiptState>(getProductsQuery, { name: 'products' }),
     graphql<CreateReceiptProps, CreateReceiptState>(addProductMutation, { name: 'addProduct' }),
+    graphql<CreateReceiptProps, CreateReceiptState>(deleteProductMutation, { name: 'deleteProduct' })
 )(CreateReceipt);
