@@ -61,7 +61,7 @@ class Navigation extends React.Component<NavigationProps, NavigationState> {
             return (
                 <div id="cashier">
                     <span>Cashier: </span>
-                    <Link to="">Pesho</Link>
+                    <Link to="">{ localStorage.getItem('user') }</Link>
                 </div>
             );
         }

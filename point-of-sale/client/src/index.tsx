@@ -23,7 +23,7 @@ const defaultOptions: DefaultOptions = {
     errorPolicy: 'ignore',
   },
   query: {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all',
   },
   mutate: {

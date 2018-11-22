@@ -71,7 +71,12 @@ const loginUserMutation = {
             }
         );
 
-        return token;
+        let tokenObj = {
+            token,
+            name: user.username
+        }
+        
+        return JSON.stringify(tokenObj);
     }
 };
 

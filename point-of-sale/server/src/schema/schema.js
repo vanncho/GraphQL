@@ -2,7 +2,7 @@ const graphql = require('graphql');
 
 // queries
 const { getUserByUsernameQuery } = require('./queries/user-query');
-const { getProductsQuery } = require('./queries/product-query');
+const { getProductsQuery, getSubSumQuery } = require('./queries/product-query');
 
 // mutations
 const { 
@@ -25,7 +25,8 @@ const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
     fields: {
         getUserByUsername: getUserByUsernameQuery,
-        getProducts: getProductsQuery
+        getProducts: getProductsQuery,
+        subSum: getSubSumQuery
     }
 });
 

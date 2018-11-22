@@ -1,22 +1,24 @@
 import * as React from 'react';
-import { graphql, compose } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
 import Product from '../products/Product';
 import ProductType from '../products/ProductType';
 import toastr from 'toastr';
 
-import { getProductsQuery } from '../../queries/product.js';
+import { getProductsQuery, getSubTotalQuery } from '../../queries/product.js';
 import { addProductMutation, deleteProductMutation } from '../../mutations/product';
 
 interface CreateReceiptProps {
     products: any,
     addProduct: Function,
-    deleteProduct: Function
+    deleteProduct: Function,
+    client: any
 }
 
 interface CreateReceiptState {
     name: string,
     quantity: number,
-    price: number
+    price: number,
+    total: number
 }
 
 class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptState> {
@@ -27,8 +29,27 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
         this.state = {
             name: '',
             quantity: 0,
-            price: 0
+            price: 0,
+            total: 0
         }
+
+        this.getSubTotal();
+    }
+
+    getSubTotal() {
+
+        this.props.client.query({
+            query: getSubTotalQuery,
+            variables: { }
+        }).then((res: any) => {
+
+            if (res.data.subSum === null && !res.data.loading) {
+                toastr.error(res.errors[0].message);
+            } else {
+                
+                this.setState({ total: res.data.subSum.total });
+            }
+        });
     }
 
     deleteProduct(productId: string): void {
@@ -45,6 +66,7 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                 if (res.data.deleteProduct === null && !res.data.loading) {
                     toastr.error(res.errors[0].message);
                 } else {
+                    this.getSubTotal();
                     toastr.success(res.data.deleteProduct.name + ' deleted!');
                 }
             })
@@ -119,7 +141,7 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                 refetchQueries: [{ query: getProductsQuery }]
                 
             }).then((res: any) => {
-
+                    this.getSubTotal();
                     toastr.success(res.data.addProduct.name + ' added successfully.');
             }).catch((err: any) => {
                 console.log(err);
@@ -183,7 +205,7 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                             <div className="col wide">
                             </div>
                             <div className="col wide right">Total:</div>
-                            <div className="col">76.50</div>
+                            <div className="col">{ this.state.total }</div>
                             <div className="col">
                                 <input id="checkoutBtn" type="submit" value="Checkout" />
                             </div>
@@ -201,5 +223,6 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
 export default compose(
     graphql<CreateReceiptProps, CreateReceiptState>(getProductsQuery, { name: 'products' }),
     graphql<CreateReceiptProps, CreateReceiptState>(addProductMutation, { name: 'addProduct' }),
-    graphql<CreateReceiptProps, CreateReceiptState>(deleteProductMutation, { name: 'deleteProduct' })
+    graphql<CreateReceiptProps, CreateReceiptState>(deleteProductMutation, { name: 'deleteProduct' }),
+    withApollo
 )(CreateReceipt);

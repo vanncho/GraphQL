@@ -10,3 +10,11 @@ export const getProductsQuery = gql`
         }
     }
 `;
+
+export const getSubTotalQuery = gql`
+    query{
+        subSum{
+            total
+        }
+    }
+`;

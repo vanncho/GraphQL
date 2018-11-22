@@ -3,7 +3,8 @@ const {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLFloat
+    GraphQLFloat,
+    GraphQLID
 } = graphql;
 
 
@@ -28,4 +29,12 @@ const UserType = new GraphQLObjectType({
     })
 });
 
-module.exports = { UserType, ProductType };
+const SubTotalType = new GraphQLObjectType({
+    name: 'SubTotal',
+    fields: () => ({
+        id: { type: GraphQLID },
+        total: { type: GraphQLFloat }
+    })
+});
+
+module.exports = { UserType, ProductType, SubTotalType };

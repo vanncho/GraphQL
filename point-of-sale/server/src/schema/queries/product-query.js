@@ -2,7 +2,7 @@
 const Product = require('../../models/product');
 
 // GraphQL
-const { ProductType } = require('../types');
+const { ProductType, SubTotalType } = require('../types');
 const graphql = require('graphql');
 const {
     GraphQLList
@@ -25,4 +25,29 @@ const getProductsQuery = {
     }
 };
 
-module.exports = { getProductsQuery };
+const getSubSumQuery = {
+    type: SubTotalType,
+    args: { },
+    async resolve(parent, args, { SECRET, user }) {
+
+        if (user) {
+
+            let promise = await new Promise(function(resolve, reject) {
+                resolve(
+                    Product.aggregate([{
+                        $group: {
+                        _id: {},
+                        total: { $sum: { $multiply: [ "$price", "$quantity" ] } },
+                        }
+                    }]).exec()
+                )
+            });
+
+            return promise[0];
+        }
+
+        throw new UnauthorizedError();
+    }
+};
+
+module.exports = { getProductsQuery, getSubSumQuery };
