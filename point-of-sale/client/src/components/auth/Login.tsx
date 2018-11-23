@@ -51,6 +51,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 let tokenObj = JSON.parse(res.data.login)
                 localStorage.setItem('token', tokenObj.token);
                 localStorage.setItem('user', tokenObj.name);
+                localStorage.setItem('userId', tokenObj.userId);
                 this.props.history.push('/');
                 toastr.success('Login successful.');
             } else {

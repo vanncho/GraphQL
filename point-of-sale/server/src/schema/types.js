@@ -1,18 +1,31 @@
 const graphql = require('graphql');
 const {
     GraphQLObjectType,
+    GraphQLInputObjectType,
     GraphQLString,
     GraphQLInt,
     GraphQLFloat,
-    GraphQLID
+    GraphQLBoolean
 } = graphql;
 
 
 
-const ProductType = new GraphQLObjectType({
-    name: 'Product',
+const ReceiptType = new GraphQLObjectType({
+    name: 'Receipt',
     fields: () => ({
         id: { type: GraphQLString },
+        products: { type: GraphQLString },
+        active: { type: GraphQLBoolean },
+        productCount: { type: GraphQLInt },
+        total: { type: GraphQLFloat },
+        creationDate: { type: GraphQLString },
+        user: { type: GraphQLString },
+    })
+});
+
+const ProductInput = new GraphQLInputObjectType({
+    name: 'Product',
+    fields: () => ({
         name: { type: GraphQLString },
         quantity: { type: GraphQLInt },
         price: { type: GraphQLFloat }
@@ -29,12 +42,4 @@ const UserType = new GraphQLObjectType({
     })
 });
 
-const SubTotalType = new GraphQLObjectType({
-    name: 'SubTotal',
-    fields: () => ({
-        id: { type: GraphQLID },
-        total: { type: GraphQLFloat }
-    })
-});
-
-module.exports = { UserType, ProductType, SubTotalType };
+module.exports = { UserType, ProductInput, ReceiptType };

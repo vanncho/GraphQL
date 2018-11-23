@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { compose, withApollo } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
 import toastr from 'toastr';
 import ReceiptList from '../receipts/ReceiptList';
 
+import { getReceipts } from '../../queries/receipt';
 import { getUsers } from '../../queries/auth';
 
 interface HomeProps {
@@ -10,6 +11,7 @@ interface HomeProps {
     data: any,
     client: any,
     getUsers: Function
+    getReceipts: any // FIX TYPE
 };
 
 interface HomeState {
@@ -45,14 +47,17 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     render(): React.ReactNode {
-
+console.log(this.props)
         const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
 
         if (isAuthenticated) {
 
-            return (
-                <ReceiptList />
-            );
+            if (!this.props.getReceipts.loading) {
+                return (
+                    <ReceiptList receipts={this.props.getReceipts.getReceipts}/>
+                );
+            }
+
         }
 
         return (
@@ -71,4 +76,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 }
 
-export default compose(withApollo)(Home);
+export default compose(
+    graphql<HomeProps, HomeState>(getReceipts, { name: 'getReceipts' }),
+    withApollo
+)(Home);

@@ -1,10 +1,17 @@
 import * as React from 'react';
 import Receipt from './Receipt';
 
-class ReceiptList extends React.Component {
+interface ReceiptListProps {
+    receipts: any // FIX TYPE
+}
+
+interface ReceiptListState { }
+
+class ReceiptList extends React.Component<ReceiptListProps, ReceiptListState> {
 
     render(): React.ReactNode {
-
+        console.log('ReceiptList')
+console.log(this.props.receipts)
         return (
             <section id="all-receipt-view">
                 <h1>All Receipts</h1>
@@ -15,12 +22,16 @@ class ReceiptList extends React.Component {
                         <div className="col">Total</div>
                         <div className="col">Actions</div>
                     </div>
-                    <div className="row">
-                        <Receipt />
-                    </div>
-                    <div className="row">
-                        <Receipt />
-                    </div>
+                    {
+                        this.props.receipts.map((receipt: any) => { // FIX TYPE
+                            return (
+                                <div className="row">
+                                    <Receipt key={receipt.id} receipt={receipt} />
+                                </div>
+                            )
+
+                        })
+                    }
                     <div className="table-foot">
                         <form id="create-receipt-form">
                             <div className="col wide">

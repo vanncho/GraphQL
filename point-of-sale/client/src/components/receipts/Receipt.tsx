@@ -1,12 +1,18 @@
 import * as React from 'react';
 
-class Receipt extends React.Component {
+interface ReceiptProps {
+    receipt: any // FIX TYPE
+}
+
+interface ReceiptState { }
+
+class Receipt extends React.Component<ReceiptProps, ReceiptState> {
 
     render(): React.ReactNode {
 
         return (
             <React.Fragment>
-                <div className="col wide">2018-04-15 14:58</div>
+                <div className="col wide">{ this.props.receipt.creationDate }</div>
                 <div className="col wide">10</div>
                 <div className="col">110.00</div>
                 <div className="col">

@@ -71,8 +71,10 @@ const loginUserMutation = {
             }
         );
 
+        // TODO: remove this and decode token on the UI
         let tokenObj = {
             token,
+            userId: user.id,
             name: user.username
         }
         

@@ -4,13 +4,11 @@ import Product from '../products/Product';
 import ProductType from '../products/ProductType';
 import toastr from 'toastr';
 
-import { getProductsQuery, getSubTotalQuery } from '../../queries/product.js';
-import { addProductMutation, deleteProductMutation } from '../../mutations/product';
+import { createReceiptMutation } from '../../mutations/receipt';
 
 interface CreateReceiptProps {
-    products: any,
-    addProduct: Function,
-    deleteProduct: Function,
+    history: any,
+    createReceipt: Function
     client: any
 }
 
@@ -18,7 +16,9 @@ interface CreateReceiptState {
     name: string,
     quantity: number,
     price: number,
-    total: number
+    allProductsQuantity: number,
+    total: number,
+    products: Array<ProductType>
 }
 
 class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptState> {
@@ -30,72 +30,36 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
             name: '',
             quantity: 0,
             price: 0,
-            total: 0
+            allProductsQuantity: 0,
+            total: 0,
+            products: []
         }
-
-        this.getSubTotal();
     }
 
-    getSubTotal() {
+    deleteProduct(id: number): void {
 
-        this.props.client.query({
-            query: getSubTotalQuery,
-            variables: { }
-        }).then((res: any) => {
+        const productsArr = this.state.products;
+        productsArr.splice(id, 1);
 
-            if (res.data.subSum === null && !res.data.loading) {
-                toastr.error(res.errors[0].message);
-            } else {
-                
-                this.setState({ total: res.data.subSum.total });
-            }
-        });
-    }
+        this.setState({ products: productsArr });
 
-    deleteProduct(productId: string): void {
-
-        if (productId.length > 0) {
-            
-            this.props.deleteProduct({
-                variables: {
-                    id: productId
-                },
-                refetchQueries: [{ query: getProductsQuery }]
-            }).then((res: any) => {
-
-                if (res.data.deleteProduct === null && !res.data.loading) {
-                    toastr.error(res.errors[0].message);
-                } else {
-                    this.getSubTotal();
-                    toastr.success(res.data.deleteProduct.name + ' deleted!');
-                }
-            })
-        }
+        toastr.info('Entry removed.');
     }
 
     displayProducts(): React.ReactNode {
 
-        let products: Array<ProductType> = [];
-
-        if (this.props.products.loading) {
-            return <div className="col wide">Product loading...</div>;
-        } else {
-            
-            products = this.props.products.getProducts;
-
-            return products.map(product => {
-                return <div className="row" key={product.id}>
-                            <Product
-                                productName={product.name}
-                                quantity={product.quantity}
-                                price={product.price}
-                            />
-                            <div className="col right">
-                                <a href="#" onClick={ () => this.deleteProduct(product.id) }>✖</a>
-                            </div>
+        return this.state.products.map((product, id) => {
+            return <div className="row" key={id}>
+                        <Product
+                            productName={product.name}
+                            quantity={product.quantity}
+                            price={product.price}
+                        />
+                        <div className="col right">
+                            <a href="#" onClick={ () => this.deleteProduct(id) }>✖</a>
                         </div>
-            });
-        }
+                    </div>
+        });
     }
 
     inputHandler(e: React.FormEvent<HTMLInputElement>): void {
@@ -132,21 +96,47 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
 
         if (correct) {
 
-            this.props.addProduct({
-                variables: {
-                    name: this.state.name,
-                    quantity: this.state.quantity,
-                    price: this.state.price
-                },
-                refetchQueries: [{ query: getProductsQuery }]
-                
-            }).then((res: any) => {
-                    this.getSubTotal();
-                    toastr.success(res.data.addProduct.name + ' added successfully.');
-            }).catch((err: any) => {
-                console.log(err);
-            });
+            const currentProduct: ProductType = { 
+                name: this.state.name, 
+                quantity: this.state.quantity,
+                price: this.state.price
+            }
+
+            const productsArr = this.state.products;
+            productsArr.push(currentProduct);
+
+            this.setState({ products: productsArr });
+            this.setState({ total: this.state.total + (this.state.price * this.state.quantity) });
+            this.setState({ allProductsQuantity: this.state.allProductsQuantity + this.state.quantity });
+
+            toastr.success('Entry added.');
         }
+    }
+
+    createReceipt(e: React.FormEvent<HTMLInputElement>): void {
+
+        e.preventDefault();
+
+        const productCount = this.state.allProductsQuantity;
+        const total = this.state.total;
+
+        this.props.createReceipt({
+            variables: {
+                products: this.state.products,
+                productCount, 
+                total
+            }
+        }).then((res: any) => {
+            
+            if (res.data.createReceipt === null && !res.data.loading) {
+                toastr.error(res.errors[0].message);
+            } else {
+                this.props.history.push('/');
+                toastr.success('Receipt created.');
+            }
+        }).catch((err: any) => {
+            console.log(err)
+        });
     }
 
     render(): React.ReactNode {
@@ -205,9 +195,13 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
                             <div className="col wide">
                             </div>
                             <div className="col wide right">Total:</div>
-                            <div className="col">{ this.state.total }</div>
+                            <div className="col">{ this.state.total.toFixed(2) }</div>
                             <div className="col">
-                                <input id="checkoutBtn" type="submit" value="Checkout" />
+                                <input
+                                    id="checkoutBtn"
+                                    type="submit"
+                                    value="Checkout" onClick={ this.createReceipt.bind(this) }
+                                />
                             </div>
                             <input type="hidden" name="receiptId" />
                             <input type="hidden" name="productCount" />
@@ -221,8 +215,6 @@ class CreateReceipt extends React.Component<CreateReceiptProps, CreateReceiptSta
 }
 
 export default compose(
-    graphql<CreateReceiptProps, CreateReceiptState>(getProductsQuery, { name: 'products' }),
-    graphql<CreateReceiptProps, CreateReceiptState>(addProductMutation, { name: 'addProduct' }),
-    graphql<CreateReceiptProps, CreateReceiptState>(deleteProductMutation, { name: 'deleteProduct' }),
+    graphql<CreateReceiptProps, CreateReceiptState>(createReceiptMutation, { name: 'createReceipt' }),
     withApollo
 )(CreateReceipt);
