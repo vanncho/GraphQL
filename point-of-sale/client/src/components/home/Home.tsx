@@ -11,7 +11,7 @@ interface HomeProps {
     data: any,
     client: any,
     getUsers: Function
-    getReceipts: any // FIX TYPE
+    getReceipts: any
 };
 
 interface HomeState {
@@ -47,7 +47,7 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     render(): React.ReactNode {
-console.log(this.props)
+
         const isAuthenticated: boolean = localStorage.getItem('token') !== null || false;
 
         if (isAuthenticated) {

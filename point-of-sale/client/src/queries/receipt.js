@@ -6,9 +6,22 @@ export const getReceipts = gql`
             id
             active
             creationDate
-            products
             productCount
             total
+        }
+    }
+`;
+
+export const getReceiptByID = gql`
+    query($id: String!){
+        getReceiptById(id: $id) {
+            id
+            products
+            active
+            productCount
+            total
+            creationDate
+            user
         }
     }
 `;

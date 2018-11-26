@@ -2,7 +2,7 @@ const graphql = require('graphql');
 
 // queries
 const { getUserByUsernameQuery } = require('./queries/user-query');
-const { getReceiptsQuery } = require('./queries/receipt-query');
+const { getReceiptsQuery, getReceiptById } = require('./queries/receipt-query');
 
 // mutations
 const { 
@@ -24,7 +24,8 @@ const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
     fields: {
         getUserByUsername: getUserByUsernameQuery,
-        getReceipts: getReceiptsQuery
+        getReceipts: getReceiptsQuery,
+        getReceiptById: getReceiptById
     }
 });
 

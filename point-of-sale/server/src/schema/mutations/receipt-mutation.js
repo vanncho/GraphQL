@@ -30,8 +30,23 @@ const createReceiptMutation = {
             
             if (dbUser) {
     
+                let productsSorted = args.products;
+                productsSorted.sort((a, b) => {
+
+                    const aName = a.name.toLowerCase();
+                    const bName = b.name.toLowerCase();
+
+                    if (aName < bName) {
+                        return -1;
+                    } else if (aName > bName) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+
                 const receipt = new Receipt({
-                    products: JSON.stringify(args.products),
+                    products: JSON.stringify(productsSorted),
                     productCount: args.productCount,
                     total: args.total,
                     user: dbUser._id

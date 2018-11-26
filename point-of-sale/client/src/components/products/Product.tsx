@@ -22,7 +22,7 @@ class Product extends React.Component<ProductProps, ProductState> {
                 <div className="col wide">{ this.props.productName }</div>
                 <div className="col wide">{ this.props.quantity }</div>
                 <div className="col wide">{ this.props.price }</div>
-                <div className="col">{ this.props.quantity * this.props.price }</div>
+                <div className="col">{ (this.props.quantity * this.props.price).toFixed(2) }</div>
             </React.Fragment>
         );
     }

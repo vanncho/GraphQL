@@ -1,13 +1,13 @@
 // Mongoose
 const Receipt = require('../../models/receipt');
-const UserReceipt = require('../../models/user-receipt');
 
 // GraphQL
 const { ReceiptType } = require('../types');
 const graphql = require('graphql');
 const {
     GraphQLString,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } = graphql;
 const UnauthorizedError = require('../../errors/unauthorized-error');
 
@@ -25,4 +25,19 @@ const getReceiptsQuery = {
     }
 };
 
-module.exports = { getReceiptsQuery };
+const getReceiptById = {
+    type: ReceiptType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    async resolve(parent, args, { SECRET, user }) {
+
+        if (user) {
+            return await Receipt.findOne({_id: args.id});
+        }
+
+        throw new UnauthorizedError();
+    }
+}
+
+module.exports = { getReceiptsQuery, getReceiptById };

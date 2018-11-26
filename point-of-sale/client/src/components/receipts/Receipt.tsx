@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import ReceiptType from './ReceiptType';
 
 interface ReceiptProps {
-    receipt: any // FIX TYPE
+    receipt: ReceiptType
 }
 
 interface ReceiptState { }
@@ -13,11 +16,10 @@ class Receipt extends React.Component<ReceiptProps, ReceiptState> {
         return (
             <React.Fragment>
                 <div className="col wide">{ this.props.receipt.creationDate }</div>
-                <div className="col wide">10</div>
-                <div className="col">110.00</div>
+                <div className="col wide">{ this.props.receipt.productCount }</div>
+                <div className="col">{ this.props.receipt.total.toFixed(2) }</div>
                 <div className="col">
-                    <a href="#">Details</a>
-                    <a href="#">Edit</a>
+                    <Link to={ "/details/" + this.props.receipt.id }>Details</Link>
                 </div>
             </React.Fragment>
         );
